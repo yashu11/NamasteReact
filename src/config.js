@@ -1,0 +1,1 @@
+export const LOGO_IMG="https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,f_auto,q_auto:eco,dpr_1/stlxpwdmvwor9s6wjiqb"
