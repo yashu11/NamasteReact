@@ -1,4 +1,4 @@
-import ResturantCard from "../ResturantCard";
+import ResturantCard from "./ResturantCard";
 
 const Body = () => {
   const resturantList = [
