@@ -1,10 +1,8 @@
 import ResturantCard from "./ResturantCard";
-import { resturantList } from "./config";
-import { useState } from "react";
-
-function filterData(searchTxt, resturant) {
-  return resturant.filter((r) => r.data.name.includes(searchTxt));
-}
+import { useEffect, useState } from "react";
+import ShimmerUI from "./Shimmer";
+import { Link } from "react-router-dom";
+import { filterData } from "./utils/helper";
 
 const Body = () => {
   //in JS
@@ -12,11 +10,28 @@ const Body = () => {
   //in React
   //Array Destructuring
   const [searchTxt, setsearchxt] = useState("");
-  const [resturants, setResturant] = useState(resturantList);
+  const [filteredResturants, setfilteredResturants] = useState([]);
+  const [allResturants, setAllResturants] = useState([]);
 
-  return (
+  useEffect(() => {
+    getResturants();
+  }, []);
+
+  async function getResturants() {
+    const data = await fetch(
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=13.0055113&lng=77.5692358&page_type=DESKTOP_WEB_LISTING"
+    );
+    const json = await data.json();
+    console.log(json);
+    setAllResturants(json?.data?.cards[2]?.data?.data?.cards);
+    setfilteredResturants(json?.data?.cards[2]?.data?.data?.cards);
+  }
+
+  return allResturants.length === 0 ? (
+    <ShimmerUI />
+  ) : (
     <>
-      <div className="serach-container">
+      <div className="search-container p-5 m-2 bg-purple-100 border-4">
         <input
           type="text"
           className="search-input"
@@ -27,19 +42,39 @@ const Body = () => {
           }}
         ></input>
         <button
-          className="search-btn"
+          className="search-btn p-2 bg-red-500 border-4 rounded-2xl hover:bg-red-800"
           onClick={() => {
-            const data = filterData(searchTxt, resturants);
-            setResturant(data);
+            const data = filterData(searchTxt, allResturants);
+            setfilteredResturants(data);
           }}
         >
           Search
         </button>
-        {searchTxt}
+        {filteredResturants.length === 0 ? (
+          <h1>No resturant match your search</h1>
+        ) : filteredResturants.length === allResturants.length ? (
+          <h2>{allResturants.length} resturants in total</h2>
+        ) : (
+          <h1>
+            {filteredResturants.length}{" "}
+            {filteredResturants.length === 1 ? (
+              <span>resturant match your search </span>
+            ) : (
+              <span> resturants match your search</span>
+            )}
+          </h1>
+        )}
       </div>
-      <div className="resturant-list">
-        {resturants.map((resturant) => {
-          return <ResturantCard {...resturant.data} key={resturant.data.id} />;
+      <div className="flex flex-wrap">
+        {filteredResturants.map((resturant) => {
+          return (
+            <Link
+              to={"/resturant/" + resturant.data.id}
+              key={resturant.data.id}
+            >
+              <ResturantCard {...resturant.data} />
+            </Link>
+          );
         })}
       </div>
     </>

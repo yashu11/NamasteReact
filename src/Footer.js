@@ -3,7 +3,7 @@ import React from "react";
 const Footer = () => {
   return (
     <React.Fragment>
-      <h5>Footer</h5>
+      <h5 color="red">Footer</h5>
     </React.Fragment>
   );
 };

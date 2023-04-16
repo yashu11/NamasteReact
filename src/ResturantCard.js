@@ -7,11 +7,11 @@ const ResturantCard = ({
   longMileTravelString,
 }) => {
   return (
-    <div className="rcard">
+    <div className="w-[200px] flex-wrap px-5 m-2 bg-orange-100 ">
       <img src={IMG_CDN + cloudinaryImageId} />
-      <h2>{name}</h2>
+      <h2 className="font-bold">{name}</h2>
       <h3>{cuisines.join(", ")}</h3>
-      <h4>{longMileTravelString} stars</h4>
+      <h4>{longMileTravelString}</h4>
     </div>
   );
 };
